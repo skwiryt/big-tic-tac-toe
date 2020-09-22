@@ -1,0 +1,230 @@
+html {
+	overflow: hidden;
+}
+
+html body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: rgb(224, 204, 175);
+}
+.cell {
+    position: relative;
+    width: 35px;
+    height: 35px;
+    border: solid 1px rgb(145, 144, 144);
+
+}
+.js-big-cell {
+    width: 110px;
+    height: 110px;
+    font-size: 90px;
+}
+
+.js-X::before {
+    position: absolute;
+    top: 8px;
+    left: 12px;
+    content : "X";
+}
+.js-O::before {
+    position: absolute;
+    top: 8px;
+    left: 12px;
+    content: "O";
+}
+.js-X-big-cell::before {
+    position: absolute;
+    top: 5px;
+    left: 20px;
+    content : "X";
+}
+.js-O-big-cell::before {
+    position: absolute;
+    top: 5px;
+    left: 20px;
+    content : "O";
+}
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100vh;
+    padding-left: 30px;
+    padding-right: 20px;
+    padding-bottom: 70px;
+    background-color: rgb(190, 152, 102);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: space-between;
+}
+.flex-wrapper {
+    
+    margin-left: 300px;  
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+}
+.board {
+    display: grid;
+    background-color: rgb(199, 186, 174);
+    grid-template-columns: repeat(9, 1fr);
+    border: solid 1px rgb(51, 51, 51);
+    border-radius: 2px;
+}
+.logo {
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    font-size: 30px;
+    font-weight: 900;
+    color: rgb(39, 39, 39);
+}
+.options {
+    text-align: right;
+    margin-bottom: 40px;
+}
+.draw-message {
+    background-color: coral;
+    text-align: center;
+    padding: 10px;
+    font-size: 18px;
+    margin-bottom: 25px;
+    
+}
+.controls {
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 5px;
+}
+.player {
+    position: relative;
+    margin-top: 30px;
+    padding: 8px;
+    line-height: 1.5rem;
+    background-color: rgb(199, 186, 174);
+}
+button {
+    background-color: rgb(224, 204, 175);   
+    border: none;
+    padding: 5px;
+}
+button:hover {
+    color: rgb(160, 81, 52);
+
+    outline: 2px solid  rgb(199, 186, 174);
+    outline: 2px solid rgb(145, 144, 144);;
+}
+.player-message {
+    position: absolute;
+    top: 8px;
+    right: 8px;    
+    text-align: center;
+    opacity: 0;
+    display: none;
+}
+.js-playing .player-message{
+    opacity: 1;
+    display: inline;
+}
+.options-modal {
+    position: fixed;
+    top: 100px;
+    left: 320px;
+    z-index: 10;
+    padding: 20px;
+    display: flex;
+    flex-flow: column;
+    box-shadow: 5px 5px 5px rgb(161, 134, 99);
+    background-color: burlywood;   
+}
+.player-modal {
+    position: fixed;
+    top: 100px;
+    left: 320px;
+    z-index: 10;
+    padding: 20px;
+    width: 320px;
+    display: flex;
+    flex-flow: column;
+    box-shadow: 5px 5px 5px rgb(161, 134, 99);
+    background-color: burlywood;
+}
+#player-form {
+    display: flex;
+    flex-flow: column;
+    
+}
+.form-row {
+  
+    margin: 0.5rem;
+}
+.bottom-border{
+    border-bottom: solid 1px  rgb(145, 144, 144);
+    padding-bottom: 8px;
+}
+.form-row::after {
+    content: ' ';
+    display: table;
+    clear: both;
+  }
+  .col-left {
+    float: left; 
+  }
+  .col-right {
+    float: right; 
+  }
+input[type=text] {
+    background-color:rgb(199, 186, 174); 
+    border: solid 1px rgb(145, 144, 144);
+    margin-left: 20px;
+    width: 120px;
+}
+input[type="radio"] {
+    margin-left: 0;
+    margin-right: 6px;
+    width: 12px;
+    vertical-align: middle;
+}
+select, option {
+    background-color: rgb(199, 186, 174);
+    width: 55px;
+}
+.form-buttons {
+    text-align: right;
+    margin: 0.5rem 0.5rem 0.2rem 0;
+}
+
+.displayed {
+    opacity: 1;
+    display: inline-block;
+}
+.shadow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    min-width: 100%;
+    min-height: 100vh;
+    content: ' ';
+    z-index: 1;
+    visibility: visible;
+    opacity: 1;
+}
+.js-not-displayed {
+    opacity: 0;
+    display: none;
+}
+.js-not-visible {
+    opacity: 0;
+    visibility: hidden;
+}
+.js-winning {
+    background-color: coral;
+}
+.js-playing {
+    border: solid 2px coral;
+}
