@@ -281,7 +281,7 @@ const AI = (function() {
             let newChilds = [...moves];
             newChilds.splice(i, 1);
             return newChilds;
-    }    
+    }
     function getConsideredMoves(data) {        
         let size = settings.aiSize;
         let considered = [];        
@@ -312,9 +312,10 @@ const AI = (function() {
                     //those to W
                     for (i = 1; i <= size; i++) {
                         if((column - i)>= 0) {
-                            neighbours.push(data[row][column - 1]);
+                            neighbours.push(data[row][column - i]);
                         }  
                     }
+                    
                     //those to S-E
                     for (i = 1; i <= size; i++) {
                         for (n = 1; n <= size; n++) {
@@ -379,6 +380,7 @@ const AI = (function() {
         let column;
         let row;
         let answerMove;
+        let value;
         //but if it is a computer who starts - it will only have value
         if (move.column === undefined || move.row == undefined) {
             answerMove = randomMiddle(mainBoard.getData());
@@ -387,12 +389,14 @@ const AI = (function() {
             column = move.column;
             row = move.row;            
             aiBoard.importData(mainBoard.getData());  
-            let possibleMoves = getConsideredMoves(aiBoard.getData());      
+            let possibleMoves = getConsideredMoves(aiBoard.getData());              
             let minMax = minMaxValue(possibleMoves, column, row, aiBoard, true, 0, -1, 1, null);
             answerMove = minMax.bestMove; 
+            value = minMax.value;
         }  
         console.log(`final bestMove is: ${answerMove}`);
         console.log(answerMove);
+        console.log(`At final minmax value = ${value}`);
         let allCells = Array.from(document.querySelectorAll(".cell"));
         let answer = null;
         allCells.forEach(c => {
@@ -449,17 +453,28 @@ const AI = (function() {
                     newBoard.addMove(m.column, m.row, moveValue);
                     let newChilds = getNewChilds(i, childMoves);                    
                     let moveMinMax =  minMaxValue(newChilds, m.column, m.row, newBoard, false, depth, a, b); 
-                    //if (true) {aiAnswers.push({newMove, value, depth});}
+                    let tempValue = moveMinMax.value;
+                    //if (depth === 1) {aiAnswers.push({m, tempValue, depth});}
                     if (moveMinMax.value > value) {
                         value = moveMinMax.value;
-                        bestMove = m;                        
-                    } 
-                    a = Math.max(a, value);
+                        bestMove = m;
+                        //this below can not be set here as it will modify m fo other children
+                        //bestMove.value = moveValue;                      
+                    }                    
+                    a = Math.max(a, value);                    
                     if (a >= b) {                        
                         return {value, depth, bestMove}; 
-                    }                    
-                }                 
-                return {value, depth, bestMove};   
+                    }        
+                }  
+                /*
+                if (depth === 1) 
+                {
+                    console.log("proposed best move is:");
+                    console.log (bestMove);
+                    console.log (`At minmax value: ${value}`);
+                } 
+                */           
+                return {value, depth, bestMove};  
             }
             else {
                let value = 1;                          
@@ -471,10 +486,10 @@ const AI = (function() {
                     let newChilds = getNewChilds(i, childMoves);
                     let moveMinMax =  minMaxValue(newChilds, m.column, m.row, newBoard, true, depth, a, b);                                 
                     value = Math.min(value, moveMinMax.value);  
-                    b = Math.min(b, value);
+                    b = Math.min(b, value);                    
                     if ( b <= a ) {
                         return {value, depth}; 
-                    }      
+                    }
                 }
                 return {value, depth}; 
             }  
@@ -555,8 +570,7 @@ const result = (function() {
         }
         return null;
     }
-    function getWinningCells(cellObject, data){
-        //console.log(data);
+    function getWinningCells(cellObject, data){        
         let column = cellObject.column;
         let row = cellObject.row;
         let value = cellObject.value;
@@ -667,7 +681,7 @@ const game = (function() {
         let cellObject = {};
         cellObject.column = Number(cellElement.getAttribute("data-column"));
         cellObject.row = Number(cellElement.getAttribute("data-row"));
-        console.log(player2);
+       
         if (gameover) {
             return;
         }
@@ -677,6 +691,7 @@ const game = (function() {
                 return;
             }            
             activePlayer.play(cellElement); 
+            console.log(player2.getName());
         }    
         else {
             display.showPlayerModal();        
