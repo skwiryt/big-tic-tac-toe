@@ -15,7 +15,7 @@ html body {
 }
 .js-big-cell {
     width: 110px;
-    height: 110px;
+    height: 110px;       
     font-size: 90px;
 }
 
@@ -41,14 +41,26 @@ html body {
     position: absolute;
     top: 5px;
     left: 20px;
+    
     content : "O";
 }
+.content-wrapper {
+    display: grid;
+    
+    grid-template-columns: 300px 1fr;
+    grid-template-rows: 100vh;
+    grid-template-areas: "nav board-wrapper";
+}
+@media (max-width: 630px) {
+    .content-wrapper {
+        grid-template-columns: 1fr;
+        grid-template-rows: 300px calc(100vh - 300px);
+        grid-template-areas: "nav"
+                             "board-wrapper";
+    }    
+}
 nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 300px;
-    height: 100vh;
+    grid-area: nav;
     padding-left: 30px;
     padding-right: 20px;
     padding-bottom: 70px;
@@ -58,36 +70,78 @@ nav {
     align-items: stretch;
     justify-content: space-between;
 }
-.flex-wrapper {
-    
-    margin-left: 300px;  
-    height: 100vh;
+.board-wrapper {     
+    grid-area: board-wrapper;    
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: auto;
 }
-.board {
+.board {    
     display: grid;
     background-color: rgb(199, 186, 174);
     grid-template-columns: repeat(9, 1fr);
     border: solid 1px rgb(51, 51, 51);
     border-radius: 2px;
 }
-.logo {
-    text-align: center;
+@media (max-width : 630px) {
+    nav {
+        padding-left: 20px;
+    }
+    .small-board {
+        width: 35vh;
+        height: 35vh;
+    }
+    .js-big-cell {
+        width: unset;
+        height: unset;
+        font-size: 10vh;
+        line-height: 10vh;
+    }
+    .js-O-big-cell::before, .js-X-big-cell::before {
+        top: 1vh;
+        left: 1.9vh;
+    }
+}
+.logo-grid {
     margin-top: 50px;
-    margin-bottom: 20px;
+    display: grid;    
+    grid-template-columns: 1fr;
+    grid-template-rows: 55px 1fr;
+    grid-template-areas: "logo"
+                         "options";
+}
+
+.logo {    
+    grid-area: logo;
+    text-align: center; 
     font-size: 30px;
     font-weight: 900;
-    color: rgb(39, 39, 39);
+    color: rgb(39, 39, 39);    
 }
 .options {
+    grid-area: options;
     text-align: right;
-    margin-bottom: 40px;
+    margin-bottom: 40px;    
+}
+@media (max-width: 630px) {
+    .logo-grid {
+        grid-template-columns: 4fr 1fr;
+        grid-template-rows: 1fr;
+        grid-template-areas: "logo options";
+    }
+    .draw-message {
+    position: fixed;    
+    width: 200px;
+    margin-left: -100px;
+    bottom: 0%;
+    left: 50%;
+    }
+
 }
 .draw-message {
     background-color: coral;
+    z-index: 1;
     text-align: center;
     padding: 10px;
     font-size: 18px;
@@ -100,9 +154,13 @@ nav {
     grid-template-columns: 1fr 1fr;
     grid-gap: 5px;
 }
-.player {
-    position: relative;
+.players {
     margin-top: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 5px;
+}
+.player {      
     padding: 8px;
     line-height: 1.5rem;
     background-color: rgb(199, 186, 174);
@@ -119,17 +177,10 @@ button:hover {
     outline: 2px solid rgb(145, 144, 144);;
 }
 .player-message {
-    position: absolute;
-    top: 8px;
-    right: 8px;    
+    margin-top: 8px;
     text-align: center;
-    opacity: 0;
-    display: none;
 }
-.js-playing .player-message{
-    opacity: 1;
-    display: inline;
-}
+
 .options-modal {
     position: fixed;
     top: 100px;
@@ -152,6 +203,15 @@ button:hover {
     flex-flow: column;
     box-shadow: 5px 5px 5px rgb(161, 134, 99);
     background-color: burlywood;
+}
+@media(max-width : 630px) {
+    .options-modal {
+        left: 0;
+    }
+    .player-modal {
+        margin-left: -160px;
+        left: 50%;
+    }
 }
 #player-form {
     display: flex;

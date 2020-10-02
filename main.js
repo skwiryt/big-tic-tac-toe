@@ -52,9 +52,24 @@ const display = (function() {
     function drawPage() {
         let height = window.innerHeight;
         let width = window.innerWidth;
-        let cellsNbC = Math.floor(settings.boardArea * (width - settings.navWidth)/settings.cellWidth);
+        let area;
+        let navWidth;
+        if (width <= settings.orientationSwitchWidth
+            || height <= settings.orientationSwitchWidth) {
+            area = 1;
+            navWidth = 0;
+            settings.bigTicTacToe = false;
+            settings.maxBoard = appParameters.smallBoardLimit;
+            settings.winningNumber = appParameters.smallWinningNumber;
+        }
+        else {
+            area = settings.boardArea;
+            navWidth = settings.navWidth;
+            
+        }
+        let cellsNbC = Math.floor(area * (width - navWidth)/settings.cellWidth);
         cellsNbC = Math.min(settings.maxBoard, cellsNbC);
-        let cellsNbR = Math.floor(settings.boardArea * height / settings.cellHeight); 
+        let cellsNbR = Math.floor(area * height / settings.cellHeight); 
         cellsNbR = Math.min(settings.maxBoard, cellsNbR);
         addControlListeners();   
         drawBoard(cellsNbC, cellsNbR);
@@ -63,9 +78,21 @@ const display = (function() {
     function reDrawBoard() {
         let height = window.innerHeight;
         let width = window.innerWidth;
-        let cellsNbC = Math.floor(settings.boardArea * (width - settings.navWidth)/settings.cellWidth);
+        let area;
+        let navWidth;
+        if (width <= settings.orientationSwitchWidth
+            || height <= settings.orientationSwitchWidth) {
+            area = 1;
+            navWidth = 0;
+        }
+        else {
+            area = settings.boardArea;
+            navWidth = settings.navWidth;
+            
+        }
+        let cellsNbC = Math.floor(area * (width - navWidth)/settings.cellWidth);
         cellsNbC = Math.min(settings.maxBoard, cellsNbC);
-        let cellsNbR = Math.floor(settings.boardArea * height / settings.cellHeight); 
+        let cellsNbR = Math.floor(area * height / settings.cellHeight); 
         cellsNbR = Math.min(settings.maxBoard, cellsNbR);
         
         drawBoard(cellsNbC, cellsNbR);
@@ -87,7 +114,13 @@ const display = (function() {
                 board.appendChild(cell);
                 cell.addEventListener('click', (e) => game.playMove(e));
             }
-        }       
+        }
+        if (!settings.bigTicTacToe) {
+            board.classList.add("small-board");
+        }
+        else {
+            board.classList.remove("small-board");
+        }  
     }
     function update(cell, sign) {
         let signClass;
@@ -137,6 +170,14 @@ const display = (function() {
         document.querySelector(".shadow").classList.add("js-not-visible");
     }
     function showOptionsModal() {
+        //update the modal with current status
+        if (settings.bigTicTacToe) {
+            document.querySelector("#big").checked = true;            
+        }
+        else {
+            document.querySelector("#small").checked = true;
+        }
+        //and show it
         document.querySelector(".options-modal").classList.remove("js-not-displayed");
         document.querySelector(".shadow").classList.remove("js-not-visible");
     }
@@ -181,7 +222,7 @@ const appParameters = {
     bigBoardLimit : 50,
     smallBoardLimit : 3,
     bigWinningNumber : 5,
-    smallWinningNumber : 3
+    smallWinningNumber : 3  
 }
 const settings = {
 
@@ -196,6 +237,7 @@ const settings = {
     cellWidth : 35,
     cellHeight : 35,
     navWidth : 300,
+    orientationSwitchWidth: 630,
 
     //fraction of available area occupied by board
     boardArea : 0.8,
@@ -726,13 +768,17 @@ const game = (function() {
         let drawMessage = document.querySelector(".draw-message");
         drawMessage.classList.remove("js-not-visible");
         //de-prompt last player
+        let message1 = document.querySelector("#player1-message");
+        let message2 = document.querySelector("#player2-message");
         let plate1 = document.querySelector("#player1-plate");
         let plate2 = document.querySelector("#player2-plate");
         if (activePlayer === player1) {
-            plate1.classList.remove("js-playing");            
+            plate1.classList.remove("js-playing");     
+            message1.classList.add("js-not-visible");       
         }
         else {            
             plate2.classList.remove("js-playing");
+            message2.classList.add("js-not-visible");
         }        
     }
     function computerAnswerTo(move) {
@@ -741,6 +787,11 @@ const game = (function() {
         playMove({target: cellElement});
     }
     function startNewRound() {
+
+        if (!player1 || !player2) {
+            display.showPlayerModal();        
+            return;
+        }
 
         gameover = false;
         //hide draw message if any        
@@ -766,15 +817,22 @@ const game = (function() {
     }
     function setActivePlayer(player) {
         activePlayer = player;
+        let message1 = document.querySelector("#player1-message");
+        let message2 = document.querySelector("#player2-message");
         let plate1 = document.querySelector("#player1-plate");
         let plate2 = document.querySelector("#player2-plate");
         if (player === player1) {
             plate1.classList.add("js-playing");
             plate2.classList.remove("js-playing")
+            message1.classList.remove("js-not-visible");
+            message2.classList.add("js-not-visible");
         }
         else {
             plate1.classList.remove("js-playing");
             plate2.classList.add("js-playing");
+            message1.classList.add("js-not-visible");
+            message2.classList.remove("js-not-visible");
+
         }        
     }
     function getOpponent() {
