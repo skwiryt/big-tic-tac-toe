@@ -651,6 +651,7 @@ const game = (function() {
 
          //hide players info
          [...document.querySelectorAll(".player")].forEach(e => e.classList.add("js-not-displayed"));
+         [...document.querySelectorAll(".player-message")].forEach(e => e.classList.add("js-not-visible"));
 
          //hide draw-message if any
          document.querySelector(".draw-message").classList.add("js-not-visible");
