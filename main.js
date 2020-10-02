@@ -675,7 +675,7 @@ const game = (function() {
         }
         else {
             humanOpponent = false;
-            player2 = playerFactory("Computer");
+            player2 = playerFactory("AI");
         }
         let weapon1 = form.player1Weapon.value;
         let weapon2 = form.player2Weapon.value;
